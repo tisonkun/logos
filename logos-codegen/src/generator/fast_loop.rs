@@ -33,7 +33,7 @@ impl<'a> Generator<'a> {
     pub fn impl_fast_loop(&mut self, self_edge: &ByteClass) -> TokenStream {
         // Note: Unlike forks, we don't ever fall back to doing normal comparisons - A LUT is always
         // generated for the loop test. Since we read multiple times, its more likely we make back
-        // the time spend possibly brining the lut back into cache. I think it might be better to
+        // the time spend possibly bringing the lut back into cache. I think it might be better to
         // compare if we are looking for a single byte (i.e. only one comparison operation), but
         // those are rare enough where I don't think its worth the time to optimize it.
         let (ident, loop_mask) = self.add_test_to_lut(self_edge);
