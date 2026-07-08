@@ -29,7 +29,7 @@ The variable environment maps variable names to values.
 {{#include ../../../examples/array_language.rs:environment}}
 ```
 
-The token type is paremeterized by the lifetime `'a`, which is used in the lexer extras
+The token type is parameterized by the lifetime `'a`, which is used in the lexer extras
 as the lifetime of the borrow of the variable environment.
 
 ```rust,no_run,noplayground
