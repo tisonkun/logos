@@ -178,7 +178,7 @@ impl fmt::Display for StateData {
         if f.alternate() {
             writeln!(f, " {{")?;
             for (bc, state) in &self.normal {
-                writeln!(f, "  {} => {}", &bc.to_string(), state)?;
+                writeln!(f, "  {bc} => {state}")?;
             }
             if let Some(eoi_state) = &self.eoi {
                 writeln!(f, "  EOI => {eoi_state}")?;

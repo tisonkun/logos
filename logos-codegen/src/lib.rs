@@ -354,7 +354,7 @@ pub fn generate(input: TokenStream) -> TokenStream {
                     let matching = matching
                         .iter()
                         .filter(|&id| id != leaf_id)
-                        .map(|match_id| format!("  {}", &graph.leaves()[match_id.0]))
+                        .map(|match_id| format!("  {}", graph.leaves()[match_id.0]))
                         .collect::<Vec<_>>()
                         .join("\n");
 
@@ -383,7 +383,7 @@ pub fn generate(input: TokenStream) -> TokenStream {
                 parser.err(
                     format!(
                         "The pattern {} can match the empty string, which is unsupported by logos.",
-                        &graph.leaves()[leaf_id.0],
+                        graph.leaves()[leaf_id.0],
                     ),
                     graph.leaves()[leaf_id.0].span,
                 );

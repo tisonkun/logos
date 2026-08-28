@@ -212,6 +212,68 @@ impl<'source, Token: Logos<'source>> Lexer<'source, Token> {
         }
     }
 
+    /// Turn this lexer into a lexer for a new token type, replacing the extras
+    /// with the given value.
+    ///
+    /// Unlike [`morph`](Lexer::morph), this does not require the new extras type
+    /// to be [`From`] the current one, which is convenient when the two token
+    /// types use unrelated extras.
+    ///
+    /// The new lexer continues to point at the same span as the current lexer,
+    /// and the current token becomes the error token of the new token type.
+    pub fn morph_with_extras<Token2>(self, extras: Token2::Extras) -> Lexer<'source, Token2>
+    where
+        Token2: Logos<'source, Source = Token::Source>,
+    {
+        Lexer {
+            source: self.source,
+            is_prefix: self.is_prefix,
+            extras,
+            token_start: self.token_start,
+            token_end: self.token_end,
+        }
+    }
+
+    /// Turn this lexer into a lexer for a new token type, mapping the current
+    /// extras into the new ones with the provided closure.
+    ///
+    /// This is a more flexible variant of [`morph`](Lexer::morph) that lets you
+    /// carry state across the morph without requiring a [`From`] implementation
+    /// between the two extras types.
+    ///
+    /// The new lexer continues to point at the same span as the current lexer,
+    /// and the current token becomes the error token of the new token type.
+    pub fn morph_map_extras<Token2, F>(self, f: F) -> Lexer<'source, Token2>
+    where
+        Token2: Logos<'source, Source = Token::Source>,
+        F: FnOnce(Token::Extras) -> Token2::Extras,
+    {
+        Lexer {
+            source: self.source,
+            is_prefix: self.is_prefix,
+            extras: f(self.extras),
+            token_start: self.token_start,
+            token_end: self.token_end,
+        }
+    }
+
+    /// Turn this lexer into a lexer for a new token type, discarding the current
+    /// extras and using [`Default`] for the new ones.
+    ///
+    /// This is a convenience shorthand for
+    /// [`morph_with_extras`](Lexer::morph_with_extras) with
+    /// `Token2::Extras::default()`.
+    ///
+    /// The new lexer continues to point at the same span as the current lexer,
+    /// and the current token becomes the error token of the new token type.
+    pub fn morph_default_extras<Token2>(self) -> Lexer<'source, Token2>
+    where
+        Token2: Logos<'source, Source = Token::Source>,
+        Token2::Extras: Default,
+    {
+        self.morph_with_extras(Token2::Extras::default())
+    }
+
     /// Bumps the end of currently lexed token by `n` bytes.
     ///
     /// # Panics
